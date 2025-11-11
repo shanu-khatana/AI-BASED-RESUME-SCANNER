@@ -2,6 +2,9 @@ import pdfplumber
 import docx
 
 def extract_text(path):
+    """
+    Extract text from PDF or DOCX file
+    """
     text = ""
     if path.endswith(".pdf"):
         with pdfplumber.open(path) as pdf:

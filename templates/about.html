@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>About | AI Resume Scanner</title>
+  <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+      margin: 0;
+      text-align: center;
+    }
+
+    /* Navbar */
+    nav {
+      background: #4B0082;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #fff;
+    }
+    nav h1 { font-size: 22px; }
+    nav .nav-links a {
+      color: #fff;
+      margin-left: 20px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    nav .nav-links a:hover {
+      color: #ffcc00;
+    }
+
+    /* Container */
+    .container {
+      margin-top: 60px;
+      margin-bottom: 40px;
+      max-width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 0 20px;
+    }
+
+    h2 {
+      color: #4B0082;
+      font-size: 32px;
+      margin-bottom: 20px;
+    }
+
+    /* Introduction Section */
+    .intro {
+      background: #fff;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      margin-bottom: 30px;
+      text-align: left;
+    }
+
+    .intro h3 {
+      color: #4B0082;
+      font-size: 24px;
+      margin-bottom: 15px;
+    }
+
+    .intro p {
+      font-size: 18px;
+      color: #333;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+
+    /* Features Section */
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+
+    .feature-card {
+      background: #fff;
+      border-radius: 15px;
+      padding: 25px;
+      width: 300px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+    }
+
+    .feature-card i {
+      font-size: 40px;
+      color: #4B0082;
+      margin-bottom: 15px;
+    }
+
+    .feature-card h3 {
+      color: #4B0082;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .feature-card p {
+      font-size: 16px;
+      color: #333;
+      line-height: 1.5;
+    }
+
+    /* Tech Stack Section */
+    .tech-stack {
+      background: #fff;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      margin-bottom: 30px;
+    }
+
+    .tech-stack h3 {
+      color: #4B0082;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .tech-icons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .tech-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 120px;
+    }
+
+    .tech-item i {
+      font-size: 36px;
+      color: #4B0082;
+      margin-bottom: 10px;
+    }
+
+    .tech-item p {
+      font-size: 14px;
+      color: #333;
+      text-align: center;
+    }
+
+    /* Project Phases */
+    .phases {
+      background: #fff;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      margin-bottom: 30px;
+    }
+
+    .phases h3 {
+      color: #4B0082;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .timeline {
+      position: relative;
+      margin: 20px 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 4px;
+      height: 100%;
+      background: #4B0082;
+    }
+
+    .timeline-item {
+      position: relative;
+      width: 45%;
+      padding: 20px;
+      border-radius: 10px;
+      background: #f9f9f9;
+      margin-bottom: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+    .timeline-item:nth-child(odd) {
+      left: 0;
+    }
+
+    .timeline-item:nth-child(even) {
+      left: 55%;
+    }
+
+    .timeline-item h4 {
+      color: #4B0082;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .timeline-item p {
+      font-size: 16px;
+      color: #333;
+      line-height: 1.5;
+    }
+
+    /* Button */
+    a.button {
+      display: inline-block;
+      margin-top: 20px;
+      background: linear-gradient(45deg, #6a11cb, #2575fc);
+      color: #fff;
+      padding: 12px 30px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+
+    a.button:hover {
+      background: linear-gradient(45deg, #2575fc, #6a11cb);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .timeline::before {
+        left: 30px;
+      }
+      
+      .timeline-item {
+        width: calc(100% - 60px);
+        left: 60px !important;
+      }
+      
+      .features {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+  <h1>AI Resume Scanner</h1>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/about">Learn About</a>
+    <a href="/register">Register</a>
+    <a href="/login">Login</a>
+    <a href="/contact">Contact Us</a>
+  </div>
+</nav>
+
+<!-- About Section -->
+<div class="container">
+  <h2>About AI Resume Scanner</h2>
+  
+  <!-- Introduction -->
+  <div class="intro">
+    <h3>Revolutionizing Recruitment with AI</h3>
+    <p>AI Resume Scanner is an intelligent system designed to streamline the recruitment process by automatically analyzing and matching resumes with job descriptions. Our platform uses advanced Natural Language Processing and Machine Learning techniques to evaluate candidate suitability, saving recruiters countless hours while ensuring fair and unbiased screening.</p>
+    <p>By leveraging semantic similarity analysis rather than simple keyword matching, our system understands the context and meaning behind skills and experiences, providing more accurate matching between candidates and job requirements.</p>
+  </div>
+
+  <!-- Key Features -->
+  <div class="features">
+    <div class="feature-card">
+      <i class="fas fa-file-pdf"></i>
+      <h3>Multi-Format Support</h3>
+      <p>Process resumes in various formats including PDF and DOCX with accurate text extraction capabilities.</p>
+    </div>
+    
+    <div class="feature-card">
+      <i class="fas fa-brain"></i>
+      <h3>AI-Powered Matching</h3>
+      <p>Advanced semantic analysis using BERT models to understand skills and experience beyond simple keywords.</p>
+    </div>
+    
+    <div class="feature-card">
+      <i class="fas fa-user-shield"></i>
+      <h3>Bias Reduction</h3>
+      <p>Blind screening mode that anonymizes personal information to reduce unconscious bias in recruitment.</p>
+    </div>
+    
+    <div class="feature-card">
+      <i class="fas fa-chart-line"></i>
+      <h3>Scoring System</h3>
+      <p>Comprehensive scoring algorithm that evaluates skills, experience, education, and resume quality.</p>
+    </div>
+    
+    <div class="feature-card">
+      <i class="fas fa-users"></i>
+      <h3>Team Collaboration</h3>
+      <p>Share candidate profiles and evaluations with your hiring team for collaborative decision-making.</p>
+    </div>
+    
+    <div class="feature-card">
+      <i class="fas fa-history"></i>
+      <h3>Historical Data</h3>
+      <p>Store and analyze recruitment data to identify patterns and improve hiring strategies over time.</p>
+    </div>
+  </div>
+
+  <!-- Tech Stack -->
+  <div class="tech-stack">
+    <h3>Technology Stack</h3>
+    <div class="tech-icons">
+      <div class="tech-item">
+        <i class="fab fa-python"></i>
+        <p>Python</p>
+      </div>
+      <div class="tech-item">
+        <i class="fas fa-flask"></i>
+        <p>Flask</p>
+      </div>
+      <div class="tech-item">
+        <i class="fas fa-database"></i>
+        <p>SQLite</p>
+      </div>
+      <div class="tech-item">
+        <i class="fas fa-robot"></i>
+        <p>BERT</p>
+      </div>
+      <div class="tech-item">
+        <i class="fas fa-language"></i>
+        <p>NLTK</p>
+      </div>
+      <div class="tech-item">
+        <i class="fas fa-brain"></i>
+        <p>spaCy</p>
+      </div>
+      <div class="tech-item">
+        <i class="fas fa-file-alt"></i>
+        <p>pdfplumber</p>
+      </div>
+      <div class="tech-item">
+        <i class="fas fa-file-word"></i>
+        <p>python-docx</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project Phases -->
+  <div class="phases">
+    <h3>Project Development Phases</h3>
+    <div class="timeline">
+      <div class="timeline-item">
+        <h4>Phase 1: Research & Planning</h4>
+        <p>Market analysis, technology selection, and project roadmap development.</p>
+      </div>
+      
+      <div class="timeline-item">
+        <h4>Phase 2: Core Development</h4>
+        <p>Building the resume parsing, text processing, and semantic matching engine.</p>
+      </div>
+      
+      <div class="timeline-item">
+        <h4>Phase 3: User Interface</h4>
+        <p>Creating the frontend dashboard, login system, and user experience flow.</p>
+      </div>
+      
+      <div class="timeline-item">
+        <h4>Phase 4: Testing & Refinement</h4>
+        <p>Comprehensive testing, bug fixing, and performance optimization.</p>
+      </div>
+      
+      <div class="timeline-item">
+        <h4>Phase 5: Deployment</h4>
+        <p>Production deployment and monitoring system implementation.</p>
+      </div>
+    </div>
+  </div>
+
+  <a href="/register" class="button">Try AI Resume Scanner</a>
+</div>
+
+</body>
+</html>

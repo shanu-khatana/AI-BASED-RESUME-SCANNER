@@ -1,128 +1,608 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Scan Result</title>
-<link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
-<style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scan Results | AI Resume Scanner</title>
+  <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    /* Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
-        font-family: 'Segoe UI', sans-serif;
-        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+      min-height: 100vh;
+      color: #333;
     }
-    .card {
-        background: #fff;
-        padding: 50px 60px;
-        border-radius: 20px;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-        width: 500px;
-        text-align: center;
-        position: relative;
+
+    /* Navbar */
+    nav {
+      background: #4B0082;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
     }
-    h2 {
-        color: #4B0082;
-        font-size: 28px;
-        margin-bottom: 30px;
+    nav h1 { font-size: 24px; }
+    nav .nav-links a {
+      color: #fff;
+      margin-left: 20px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.3s;
     }
-    .progress-circle {
+    nav .nav-links a:hover {
+      color: #ffcc00;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+
+    /* Header Section */
+    .result-header {
+      background: #fff;
+      border-radius: 15px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      text-align: center;
+      animation: fadeIn 0.8s ease-out;
+    }
+    .result-header h2 {
+      color: #4B0082;
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+    .result-header p {
+      color: #666;
+      font-size: 16px;
+    }
+    .file-info {
+      display: inline-block;
+      background: rgba(75, 0, 130, 0.05);
+      padding: 8px 20px;
+      border-radius: 30px;
+      margin-top: 15px;
+      color: #4B0082;
+      font-weight: 600;
+    }
+
+    /* Main Score Section */
+    .main-score {
+      background: linear-gradient(135deg, #4B0082, #6a11cb);
+      border-radius: 20px;
+      padding: 40px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(75, 0, 130, 0.3);
+      text-align: center;
+      color: white;
+      animation: slideIn 0.8s ease-out;
+    }
+    .score-circle {
+      width: 200px;
+      height: 200px;
+      margin: 0 auto 20px;
+      position: relative;
+    }
+    .score-circle svg {
+      transform: rotate(-90deg);
+    }
+    .score-circle .score-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 48px;
+      font-weight: 700;
+    }
+    .score-label {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .score-message {
+      font-size: 18px;
+      opacity: 0.9;
+    }
+
+    /* Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .metric-card {
+      background: #fff;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      animation: fadeInUp 0.8s ease-out;
+      animation-fill-mode: both;
+    }
+    .metric-card:nth-child(1) { animation-delay: 0.1s; }
+    .metric-card:nth-child(2) { animation-delay: 0.2s; }
+    .metric-card:nth-child(3) { animation-delay: 0.3s; }
+    .metric-card:nth-child(4) { animation-delay: 0.4s; }
+    
+    .metric-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .metric-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      font-size: 24px;
+    }
+    .metric-icon.similarity { background: rgba(40, 167, 69, 0.1); color: #28a745; }
+    .metric-icon.skills { background: rgba(255, 193, 7, 0.1); color: #ffc107; }
+    .metric-icon.experience { background: rgba(23, 162, 184, 0.1); color: #17a2b8; }
+    .metric-icon.education { background: rgba(102, 16, 242, 0.1); color: #6610f2; }
+    
+    .metric-title {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 5px;
+    }
+    .metric-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: #4B0082;
+    }
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #f0f0f0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 1s ease-out;
+    }
+    .progress-fill.similarity { background: #28a745; }
+    .progress-fill.skills { background: #ffc107; }
+    .progress-fill.experience { background: #17a2b8; }
+    .progress-fill.education { background: #6610f2; }
+
+    /* Skills Section */
+    .skills-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .skills-card {
+      background: #fff;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      animation: fadeInUp 0.8s ease-out 0.5s both;
+    }
+    .skills-card h3 {
+      color: #4B0082;
+      font-size: 20px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+    }
+    .skills-card h3 i {
+      margin-right: 10px;
+    }
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .skill-tag {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .skill-tag.matched {
+      background: rgba(40, 167, 69, 0.1);
+      color: #28a745;
+      border: 1px solid rgba(40, 167, 69, 0.2);
+    }
+    .skill-tag.missing {
+      background: rgba(220, 53, 69, 0.1);
+      color: #dc3545;
+      border: 1px solid rgba(220, 53, 69, 0.2);
+    }
+    .no-skills {
+      text-align: center;
+      color: #999;
+      font-style: italic;
+      padding: 20px;
+    }
+
+    /* Recommendations */
+    .recommendations {
+      background: #fff;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      animation: fadeInUp 0.8s ease-out 0.6s both;
+    }
+    .recommendations h3 {
+      color: #4B0082;
+      font-size: 22px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+    }
+    .recommendations h3 i {
+      margin-right: 10px;
+    }
+    .recommendation-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 15px;
+      padding: 15px;
+      background: rgba(75, 0, 130, 0.03);
+      border-radius: 10px;
+      border-left: 4px solid #4B0082;
+    }
+    .recommendation-item i {
+      color: #4B0082;
+      margin-right: 15px;
+      margin-top: 3px;
+    }
+    .recommendation-content h4 {
+      color: #4B0082;
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+    .recommendation-content p {
+      color: #666;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* Action Buttons */
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 30px;
+      animation: fadeIn 0.8s ease-out 0.8s both;
+    }
+    .btn {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+    .btn i {
+      margin-right: 8px;
+    }
+    .btn-primary {
+      background: linear-gradient(45deg, #4B0082, #6a11cb);
+      color: white;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(45deg, #6a11cb, #4B0082);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(75, 0, 130, 0.3);
+    }
+    .btn-secondary {
+      background: #fff;
+      color: #4B0082;
+      border: 2px solid #4B0082;
+    }
+    .btn-secondary:hover {
+      background: #4B0082;
+      color: white;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideIn {
+      from { transform: translateY(-30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes fadeInUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .score-circle {
         width: 150px;
         height: 150px;
-        border-radius: 50%;
-        background: conic-gradient(#6a11cb 0%, #e0e0e0 0%);
-        display: flex;
-        justify-content: center;
+      }
+      .score-circle .score-text {
+        font-size: 36px;
+      }
+      
+      .skills-section {
+        grid-template-columns: 1fr;
+      }
+      
+      .actions {
+        flex-direction: column;
         align-items: center;
-        margin: 0 auto 20px auto;
-        font-size: 28px;
-        font-weight: bold;
-        color: #4B0082;
-        position: relative;
+      }
+      
+      .btn {
+        width: 100%;
+        max-width: 300px;
+      }
+      
+      nav {
+        flex-direction: column;
+        padding: 15px;
+      }
+      
+      nav h1 {
+        margin-bottom: 10px;
+      }
+      
+      nav .nav-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      nav .nav-links a {
+        margin: 5px 10px;
+      }
     }
-    .progress-circle::before {
-        content: "";
-        position: absolute;
-        width: 120px;
-        height: 120px;
-        background: #fff;
-        border-radius: 50%;
-    }
-    .progress-circle span {
-        position: absolute;
-    }
-    .missing-skills {
-        margin-top: 25px;
-        text-align: left;
-    }
-    .missing-skills span {
-        display: inline-block;
-        background: #ff6b6b;
-        color: white;
-        padding: 6px 12px;
-        margin: 4px;
-        border-radius: 10px;
-        font-size: 14px;
-    }
-    a {
-        display: inline-block;
-        margin-top: 30px;
-        text-decoration: none;
-        color: white;
-        background: linear-gradient(45deg, #6a11cb, #2575fc);
-        padding: 12px 25px;
-        border-radius: 12px;
-        transition: 0.3s;
-    }
-    a:hover {
-        background: linear-gradient(45deg, #2575fc, #6a11cb);
-    }
-</style>
+  </style>
 </head>
 <body>
-<div class="card">
-    <h2>Scan Result</h2>
 
-    <!-- Circular progress bar -->
-    <div class="progress-circle" id="progress-circle">
-        <span id="progress-text">0%</span>
+<!-- Navbar -->
+<nav>
+  <h1>AI Resume Scanner</h1>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/about">Learn About</a>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/contact">Contact Us</a>
+    <a href="/logout">Logout</a>
+  </div>
+</nav>
+
+<!-- Main Container -->
+<div class="container">
+  <!-- Result Header -->
+  <div class="result-header">
+    <h2>Resume Analysis Complete!</h2>
+    <p>Here's a comprehensive breakdown of the candidate's compatibility with your job requirements</p>
+    <div class="file-info">
+      <i class="fas fa-file-alt"></i> {{ filename }}
+    </div>
+  </div>
+
+  <!-- Main Score -->
+  <div class="main-score">
+    <div class="score-circle">
+      <svg width="200" height="200">
+        <circle cx="100" cy="100" r="90" stroke="rgba(255,255,255,0.2)" stroke-width="12" fill="none"/>
+        <circle cx="100" cy="100" r="90" stroke="white" stroke-width="12" fill="none"
+                stroke-dasharray="{{ score * 5.65 }}, 565" stroke-linecap="round"/>
+      </svg>
+      <div class="score-text">{{ score }}%</div>
+    </div>
+    <div class="score-label">Overall Match Score</div>
+    <div class="score-message">
+      {% if score >= 80 %}
+        Excellent match! Strong candidate for this position.
+      {% elif score >= 60 %}
+        Good match with potential for the role.
+      {% elif score >= 40 %}
+        Moderate match - consider for review.
+      {% else %}
+        Low match - may not meet requirements.
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Metrics Grid -->
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-header">
+        <div class="metric-icon similarity">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <div>
+          <div class="metric-title">Similarity Score</div>
+          <div class="metric-value">{{ similarity_score }}%</div>
+        </div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill similarity" style="width: {{ similarity_score }}%"></div>
+      </div>
     </div>
 
-    <p><b>File Scanned:</b> {{ filename }}</p>
-
-    <!-- Missing skills -->
-    {% if missing_skills %}
-    <div class="missing-skills">
-        <b>Missing Skills:</b><br>
-        {% for skill in missing_skills %}
-            <span>{{ skill }}</span>
-        {% endfor %}
+    <div class="metric-card">
+      <div class="metric-header">
+        <div class="metric-icon skills">
+          <i class="fas fa-cogs"></i>
+        </div>
+        <div>
+          <div class="metric-title">Skills Match</div>
+          <div class="metric-value">{{ matched_count }}/{{ matched_count + missing_count }}</div>
+        </div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill skills" style="width: {{ (matched_count / (matched_count + missing_count) * 100) if (matched_count + missing_count) > 0 else 0 }}%"></div>
+      </div>
     </div>
-    {% else %}
-        <p>All important skills matched!</p>
+
+    <div class="metric-card">
+      <div class="metric-header">
+        <div class="metric-icon experience">
+          <i class="fas fa-briefcase"></i>
+        </div>
+        <div>
+          <div class="metric-title">Experience</div>
+          <div class="metric-value">{{ years_experience }} years</div>
+        </div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill experience" style="width: {{ (years_experience * 10) if years_experience <= 10 else 100 }}%"></div>
+      </div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-header">
+        <div class="metric-icon education">
+          <i class="fas fa-graduation-cap"></i>
+        </div>
+        <div>
+          <div class="metric-title">Education Level</div>
+          <div class="metric-value">
+            {% if education_level >= 5 %}
+              PhD
+            {% elif education_level >= 4 %}
+              Master's
+            {% elif education_level >= 3 %}
+              Bachelor's
+            {% elif education_level >= 2 %}
+              Diploma
+            {% else %}
+              Basic
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill education" style="width: {{ (education_level * 20) }}%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Skills Section -->
+  <div class="skills-section">
+    <div class="skills-card">
+      <h3><i class="fas fa-check-circle" style="color: #28a745;"></i> Matched Skills</h3>
+      {% if matched_skills %}
+        <div class="skill-tags">
+          {% for skill in matched_skills %}
+            <span class="skill-tag matched">{{ skill }}</span>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="no-skills">No specific skills matched</div>
+      {% endif %}
+    </div>
+
+    <div class="skills-card">
+      <h3><i class="fas fa-times-circle" style="color: #dc3545;"></i> Missing Skills</h3>
+      {% if missing_skills %}
+        <div class="skill-tags">
+          {% for skill in missing_skills %}
+            <span class="skill-tag missing">{{ skill }}</span>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="no-skills">All key skills found!</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Recommendations -->
+  <div class="recommendations">
+    <h3><i class="fas fa-lightbulb"></i> Recommendations</h3>
+    
+    {% if score >= 70 %}
+      <div class="recommendation-item">
+        <i class="fas fa-thumbs-up"></i>
+        <div class="recommendation-content">
+          <h4>Strong Candidate</h4>
+          <p>This candidate shows excellent alignment with your job requirements. Consider moving forward with the interview process.</p>
+        </div>
+      </div>
     {% endif %}
+    
+    {% if matched_count > 0 %}
+      <div class="recommendation-item">
+        <i class="fas fa-star"></i>
+        <div class="recommendation-content">
+          <h4>Key Strengths</h4>
+          <p>The candidate possesses {{ matched_count }} relevant skills that match your requirements, particularly in areas that are critical for this role.</p>
+        </div>
+      </div>
+    {% endif %}
+    
+    {% if missing_skills|length > 5 %}
+      <div class="recommendation-item">
+        <i class="fas fa-exclamation-triangle"></i>
+        <div class="recommendation-content">
+          <h4>Skill Gap Analysis</h4>
+          <p>Consider whether the missing skills can be learned on the job or if they are essential requirements for immediate productivity.</p>
+        </div>
+      </div>
+    {% endif %}
+    
+    {% if years_experience < 2 %}
+      <div class="recommendation-item">
+        <i class="fas fa-info-circle"></i>
+        <div class="recommendation-content">
+          <h4>Experience Consideration</h4>
+          <p>This candidate may have limited professional experience. Evaluate their potential, projects, and willingness to learn.</p>
+        </div>
+      </div>
+    {% endif %}
+  </div>
 
-    <a href="/">← Scan Another Resume</a>
+  <!-- Action Buttons -->
+  <div class="actions">
+    <a href="/dashboard" class="btn btn-primary">
+      <i class="fas fa-redo"></i> Scan Another Resume
+    </a>
+    <a href="/dashboard" class="btn btn-secondary">
+      <i class="fas fa-history"></i> View History
+    </a>
+  </div>
 </div>
 
 <script>
-    // Animate circular progress bar
-    const score = {{ score }}; // Score percentage from Flask
-    const circle = document.getElementById("progress-circle");
-    const text = document.getElementById("progress-text");
-
-    let progress = 0;
-    const interval = setInterval(() => {
-        if(progress >= score) {
-            clearInterval(interval);
-        } else {
-            progress++;
-            circle.style.background = `conic-gradient(#6a11cb ${progress * 3.6}deg, #e0e0e0 0deg)`;
-            text.innerText = `${progress}%`;
-        }
-    }, 15); // animation speed
+  // Animate progress bars on page load
+  window.addEventListener('load', function() {
+    const progressBars = document.querySelectorAll('.progress-fill');
+    progressBars.forEach(bar => {
+      const width = bar.style.width;
+      bar.style.width = '0%';
+      setTimeout(() => {
+        bar.style.width = width;
+      }, 100);
+    });
+  });
 </script>
+
 </body>
 </html>

@@ -2,87 +2,385 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Resume Scanner</title>
-<link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <style>
+    /* Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
         font-family: 'Segoe UI', sans-serif;
-        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+        background: linear-gradient(135deg, #4B0082, #6a11cb);
+        min-height: 100vh;
+        overflow-x: hidden;
+        color: #fff; /* Set default text color to white */
+    }
+
+    /* Navbar */
+    nav {
+        background: rgba(0, 0, 0, 0.2);
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #fff;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        backdrop-filter: blur(5px);
+    }
+    nav h1 { 
+        font-size: 24px; 
+        color: #fff;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    nav .nav-links a {
+        color: #fff;
+        margin-left: 20px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: 0.3s;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+    nav .nav-links a:hover {
+        color: #ffcc00;
+    }
+
+    /* Hero Section */
+    .hero {
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
-        margin: 0;
-    }
-    .container {
-        background: #fff;
-        padding: 50px 60px;
-        border-radius: 20px;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-        width: 520px;
+        min-height: 100vh;
+        padding: 100px 20px 40px;
         text-align: center;
     }
-    h2 {
-        color: #4B0082;
-        font-size: 28px;
-        margin-bottom: 30px;
-    }
-    textarea {
+    .hero .card {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 50px 40px;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        max-width: 800px;
         width: 100%;
-        padding: 18px;
-        margin: 12px 0 22px 0;
-        border: none;
-        border-radius: 12px;
-        font-size: 15px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        resize: vertical;
-        background: linear-gradient(145deg, #f0f0ff, #e0e0ff);
-        transition: 0.3s;
+        animation: fadeInUp 1s ease-out;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
-    textarea:focus {
-        outline: none;
-        box-shadow: 0 5px 15px rgba(75, 0, 130, 0.4);
-        background: #fefefe;
-    }
-    input[type="file"] {
-        width: 100%;
-        padding: 12px;
-        border-radius: 12px;
-        border: 1px solid #ccc;
-        margin-bottom: 25px;
-    }
-    input[type="submit"] {
-        background: linear-gradient(45deg, #6a11cb, #2575fc);
+    
+    /* Preface Section */
+    .preface {
+        margin-bottom: 40px;
+        padding: 30px;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 15px;
         color: white;
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .preface::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        animation: pulse 4s ease-in-out infinite;
+    }
+    
+    .preface-content {
+        position: relative;
+        z-index: 2;
+    }
+    
+    .preface h2 {
+        font-size: 28px;
+        margin-bottom: 20px;
+        font-weight: 700;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        color: #fff;
+    }
+    
+    .preface p {
+        font-size: 18px;
+        line-height: 1.6;
+        margin-bottom: 15px;
+        color: #fff;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+    
+    .highlight {
+        color: #ffcc00;
+        font-weight: 600;
+    }
+    
+    .stats {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 30px;
+        flex-wrap: wrap;
+    }
+    
+    .stat-item {
+        text-align: center;
+        padding: 15px;
+        flex: 1;
+        min-width: 120px;
+    }
+    
+    .stat-number {
+        font-size: 32px;
+        font-weight: 700;
+        color: #ffcc00;
+        margin-bottom: 5px;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    .stat-label {
+        font-size: 14px;
+        color: #fff;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    .hero h2 {
+        color: #fff;
+        font-size: 32px;
+        margin-bottom: 20px;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    .hero p {
+        font-size: 18px;
+        margin-bottom: 30px;
+        color: #fff;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+    .hero .btn {
         padding: 15px 30px;
-        font-size: 16px;
-        border: none;
         border-radius: 12px;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-    input[type="submit"]:hover {
-        background: linear-gradient(45deg, #2575fc, #6a11cb);
-    }
-    label {
+        border: none;
+        font-size: 16px;
         font-weight: bold;
-        font-size: 15px;
-        color: #4B0082;
+        cursor: pointer;
+        margin: 10px;
+        transition: 0.3s;
+        text-decoration: none;
+        display: inline-block;
+        color: #fff;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+    .btn-login {
+        background: linear-gradient(45deg, #6a11cb, #2575fc);
+        color: #fff;
+    }
+    .btn-login:hover {
+        background: linear-gradient(45deg, #2575fc, #6a11cb);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    .btn-register {
+        background: linear-gradient(45deg, #ff6a00, #ffcc00);
+        color: #fff;
+    }
+    .btn-register:hover {
+        background: linear-gradient(45deg, #ffcc00, #ff6a00);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    
+    /* Features Section */
+    .features {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 40px;
+        flex-wrap: wrap;
+    }
+    
+    .feature-icon {
+        background: rgba(255, 255, 255, 0.1);
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        transition: transform 0.3s;
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .feature-icon:hover {
+        transform: scale(1.1);
+        background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .feature-icon i {
+        font-size: 24px;
+        color: #fff;
+    }
+    
+    .feature-text {
+        text-align: center;
+        max-width: 150px;
+    }
+    
+    .feature-text h4 {
+        color: #fff;
+        font-size: 16px;
+        margin-bottom: 5px;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+    
+    .feature-text p {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.8);
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+    
+    /* Animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 0.5; }
+        50% { transform: scale(1.1); opacity: 0.3; }
+        100% { transform: scale(1); opacity: 0.5; }
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero .card {
+            padding: 30px 20px;
+        }
+        
+        .preface h2 {
+            font-size: 24px;
+        }
+        
+        .preface p {
+            font-size: 16px;
+        }
+        
+        .stats {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .stat-item {
+            width: 100%;
+            max-width: 200px;
+        }
+        
+        nav {
+            flex-direction: column;
+            padding: 10px;
+        }
+        
+        nav h1 {
+            margin-bottom: 10px;
+        }
+        
+        nav .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        nav .nav-links a {
+            margin: 5px 10px;
+        }
     }
 </style>
 </head>
 <body>
-<div class="container">
-    <h2>AI-Based Resume Scanner</h2>
-    <form action="/upload" method="post" enctype="multipart/form-data">
-        <label>Job Description:</label><br>
-        <textarea name="jobdesc" rows="6" placeholder="Paste job description here..." required></textarea><br>
 
-        <label>Upload Resume (PDF/DOCX):</label><br>
-        <input type="file" name="resume" accept=".pdf,.docx" required><br>
+<!-- Navbar -->
+<nav>
+    <h1>AI Resume Scanner</h1>
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/about">Learn About</a>
+        <a href="/register">Register</a>
+        <a href="/login">Login</a>
+        <a href="/contact">Contact Us</a>
+    </div>
+</nav>
 
-        <input type="submit" value="Scan Resume">
-    </form>
-</div>
+<!-- Hero Section -->
+<section class="hero">
+    <div class="card">
+        <!-- Beautiful Preface Section -->
+        <div class="preface">
+            <div class="preface-content">
+                <h2>Transforming Recruitment with AI</h2>
+                <p>Welcome to the future of hiring, where <span class="highlight">artificial intelligence</span> meets <span class="highlight">human potential</span>. Our AI Resume Scanner revolutionizes the recruitment process by intelligently analyzing and matching candidates to job requirements with unprecedented accuracy.</p>
+                <p>Built with cutting-edge <span class="highlight">Natural Language Processing</span> and <span class="highlight">Machine Learning</span> technologies, this platform empowers recruiters to make data-driven decisions while ensuring fair and unbiased candidate evaluation.</p>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-number">95%</div>
+                        <div class="stat-label">Matching Accuracy</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">80%</div>
+                        <div class="stat-label">Time Saved</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Bias-Free Screening</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <h2>Scan Resumes with AI</h2>
+        <p>Upload resumes and instantly compare them with your job descriptions. Find the perfect match in seconds!</p>
+        
+        <!-- Feature Icons -->
+        <div class="features">
+            <div class="feature-text">
+                <div class="feature-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h4>AI-Powered</h4>
+                <p>Smart semantic analysis</p>
+            </div>
+            <div class="feature-text">
+                <div class="feature-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h4>Lightning Fast</h4>
+                <p>Instant results</p>
+            </div>
+            <div class="feature-text">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h4>Unbiased</h4>
+                <p>Fair evaluation</p>
+            </div>
+        </div>
+        
+        <a href="/login"><button class="btn btn-login">Login</button></a>
+        <a href="/register"><button class="btn btn-register">Register</button></a>
+    </div>
+</section>
+
 </body>
 </html>

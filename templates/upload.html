@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Upload Resume | AI Resume Scanner</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+    body {
+        margin: 0;
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: #fff;
+    }
+
+    header {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 15px 50px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    header h1 {
+        font-size: 24px;
+        letter-spacing: 1px;
+    }
+
+    nav a {
+        color: white;
+        text-decoration: none;
+        margin: 0 15px;
+        font-weight: 500;
+    }
+
+    nav a:hover {
+        text-decoration: underline;
+    }
+
+    .container {
+        max-width: 700px;
+        margin: 80px auto;
+        background: white;
+        color: #333;
+        padding: 40px 50px;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        text-align: center;
+    }
+
+    h2 {
+        color: #5a2d82;
+        margin-bottom: 30px;
+    }
+
+    textarea {
+        width: 100%;
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        resize: vertical;
+        font-size: 15px;
+        margin-bottom: 25px;
+    }
+
+    input[type="file"] {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    input[type="submit"] {
+        background: linear-gradient(45deg, #6a11cb, #2575fc);
+        border: none;
+        padding: 12px 30px;
+        border-radius: 10px;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    input[type="submit"]:hover {
+        background: linear-gradient(45deg, #2575fc, #6a11cb);
+        transform: scale(1.05);
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <h1>AI Resume Scanner</h1>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/upload">Upload</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        <a href="/logout">Logout</a>
+    </nav>
+</header>
+
+<div class="container">
+    <h2>Upload Resume and Job Description</h2>
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <label><b>Job Description:</b></label><br>
+        <textarea name="jobdesc" rows="6" placeholder="Paste the job description here..." required></textarea><br>
+
+        <label><b>Upload Resume (PDF/DOCX):</b></label><br>
+        <input type="file" name="resume" accept=".pdf,.docx" required><br>
+
+        <input type="submit" value="Scan Resume">
+    </form>
+</div>
+
+</body>
+</html>

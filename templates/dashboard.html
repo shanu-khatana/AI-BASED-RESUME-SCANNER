@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | AI Resume Scanner</title>
+  <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    /* Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+      min-height: 100vh;
+      color: #333;
+    }
+
+    /* Navbar */
+    nav {
+      background: #4B0082;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    nav h1 { font-size: 24px; }
+    nav .nav-links a {
+      color: #fff;
+      margin-left: 20px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+    nav .nav-links a:hover {
+      color: #ffcc00;
+    }
+    .user-info {
+      display: flex;
+      align-items: center;
+      background: rgba(255,255,255,0.1);
+      padding: 8px 15px;
+      border-radius: 30px;
+    }
+    .user-info i {
+      margin-right: 8px;
+      font-size: 18px;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+
+    /* Welcome Section */
+    .welcome {
+      background: #fff;
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      animation: fadeIn 0.8s ease-out;
+    }
+    .welcome-text h2 {
+      color: #4B0082;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+    .welcome-text p {
+      color: #666;
+      font-size: 16px;
+    }
+    .stats-mini {
+      display: flex;
+      gap: 20px;
+    }
+    .stat-mini {
+      text-align: center;
+      padding: 15px;
+      background: rgba(75, 0, 130, 0.05);
+      border-radius: 10px;
+      min-width: 100px;
+    }
+    .stat-mini .number {
+      font-size: 24px;
+      font-weight: 700;
+      color: #4B0082;
+    }
+    .stat-mini .label {
+      font-size: 14px;
+      color: #666;
+    }
+
+    /* Main Content Grid */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    /* Scanner Section */
+    .scanner {
+      background: #fff;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      animation: slideInLeft 0.8s ease-out;
+    }
+    .scanner h3 {
+      color: #4B0082;
+      font-size: 22px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+    }
+    .scanner h3 i {
+      margin-right: 10px;
+      font-size: 24px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #4B0082;
+    }
+    .form-control {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: #4B0082;
+    }
+    textarea.form-control {
+      resize: vertical;
+      min-height: 120px;
+    }
+    .file-upload {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+    .file-upload input[type="file"] {
+      position: absolute;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+    .file-upload-label {
+      display: block;
+      padding: 12px 15px;
+      background: #f8f9fa;
+      border: 2px dashed #4B0082;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .file-upload-label:hover {
+      background: rgba(75, 0, 130, 0.05);
+    }
+    .file-upload-label i {
+      font-size: 24px;
+      color: #4B0082;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .btn {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-block;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: linear-gradient(45deg, #4B0082, #6a11cb);
+      color: white;
+      width: 100%;
+      text-align: center;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(45deg, #6a11cb, #4B0082);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(75, 0, 130, 0.3);
+    }
+
+    /* Tips Section */
+    .tips {
+      background: #fff;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      animation: slideInRight 0.8s ease-out;
+    }
+    .tips h3 {
+      color: #4B0082;
+      font-size: 22px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+    }
+    .tips h3 i {
+      margin-right: 10px;
+      font-size: 24px;
+    }
+    .tip-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .tip-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .tip-item i {
+      color: #4B0082;
+      margin-right: 15px;
+      margin-top: 3px;
+    }
+    .tip-content h4 {
+      color: #4B0082;
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+    .tip-content p {
+      color: #666;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* History Section */
+    .history {
+      background: #fff;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      animation: fadeIn 1s ease-out;
+    }
+    .history h3 {
+      color: #4B0082;
+      font-size: 22px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .history h3 i {
+      margin-right: 10px;
+      font-size: 24px;
+    }
+    .view-all {
+      font-size: 14px;
+      color: #4B0082;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .view-all:hover {
+      text-decoration: underline;
+    }
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .history-table th {
+      text-align: left;
+      padding: 12px 15px;
+      background: rgba(75, 0, 130, 0.05);
+      color: #4B0082;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .history-table td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 14px;
+    }
+    .history-table tr:last-child td {
+      border-bottom: none;
+    }
+    .score-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 12px;
+    }
+    .score-high {
+      background: rgba(40, 167, 69, 0.1);
+      color: #28a745;
+    }
+    .score-medium {
+      background: rgba(255, 193, 7, 0.1);
+      color: #ffc107;
+    }
+    .score-low {
+      background: rgba(220, 53, 69, 0.1);
+      color: #dc3545;
+    }
+    .empty-history {
+      text-align: center;
+      padding: 30px;
+      color: #999;
+    }
+    .empty-history i {
+      font-size: 48px;
+      margin-bottom: 15px;
+      color: #ddd;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideInLeft {
+      from { transform: translateX(-30px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideInRight {
+      from { transform: translateX(30px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .welcome {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .stats-mini {
+        margin-top: 20px;
+        width: 100%;
+        justify-content: center;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      nav {
+        flex-direction: column;
+        padding: 15px;
+      }
+      
+      nav h1 {
+        margin-bottom: 10px;
+      }
+      
+      nav .nav-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      nav .nav-links a {
+        margin: 5px 10px;
+      }
+      
+      .user-info {
+        margin-top: 10px;
+      }
+      
+      .history-table {
+        font-size: 12px;
+      }
+      
+      .history-table th, .history-table td {
+        padding: 8px 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+  <h1>AI Resume Scanner</h1>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/about">Learn About</a>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/contact">Contact Us</a>
+    <div class="user-info">
+      <i class="fas fa-user-circle"></i>
+      <span>{{ username }}</span>
+    </div>
+    <a href="/logout">Logout</a>
+  </div>
+</nav>
+
+<!-- Main Container -->
+<div class="container">
+  <!-- Welcome Section -->
+  <div class="welcome">
+    <div class="welcome-text">
+      <h2>Welcome back, {{ username }}!</h2>
+      <p>Ready to find the perfect candidate? Upload a resume and job description to get started.</p>
+    </div>
+    <div class="stats-mini">
+      <div class="stat-mini">
+        <div class="number">{{ scans|length }}</div>
+        <div class="label">Total Scans</div>
+      </div>
+      <div class="stat-mini">
+        <div class="number">{{ scans|selectattr('1', 'greaterthan', 70)|list|length }}</div>
+        <div class="label">Good Matches</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Grid -->
+  <div class="content-grid">
+    <!-- Scanner Section -->
+    <div class="scanner">
+      <h3><i class="fas fa-file-upload"></i> Scan Resume</h3>
+      <form action="/upload" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+          <label for="jobdesc">Job Description</label>
+          <textarea id="jobdesc" name="jobdesc" class="form-control" placeholder="Paste the job description here..." required></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="resume">Upload Resume</label>
+          <div class="file-upload">
+            <input type="file" id="resume" name="resume" accept=".pdf,.docx" required>
+            <label for="resume" class="file-upload-label">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <span id="file-name">Choose a file or drag it here</span>
+            </label>
+          </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-search"></i> Scan Resume
+        </button>
+      </form>
+    </div>
+
+    <!-- Tips Section -->
+    <div class="tips">
+      <h3><i class="fas fa-lightbulb"></i> Tips for Best Results</h3>
+      
+      <div class="tip-item">
+        <i class="fas fa-check-circle"></i>
+        <div class="tip-content">
+          <h4>Detailed Job Descriptions</h4>
+          <p>Include specific skills, qualifications, and experience requirements for better matching.</p>
+        </div>
+      </div>
+      
+      <div class="tip-item">
+        <i class="fas fa-check-circle"></i>
+        <div class="tip-content">
+          <h4>Clear Resume Format</h4>
+          <p>Ensure resumes are well-structured with clear sections for skills, experience, and education.</p>
+        </div>
+      </div>
+      
+      <div class="tip-item">
+        <i class="fas fa-check-circle"></i>
+        <div class="tip-content">
+          <h4>Focus on Key Skills</h4>
+          <p>Our AI analyzes technical skills, certifications, and relevant experience to determine compatibility.</p>
+        </div>
+      </div>
+      
+      <div class="tip-item">
+        <i class="fas fa-check-circle"></i>
+        <div class="tip-content">
+          <h4>Review All Metrics</h4>
+          <p>Consider not just the overall score, but also matched skills and experience level.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scan History Section -->
+  <div class="history">
+    <h3>
+      <span><i class="fas fa-history"></i> Recent Scans</span>
+      <a href="#" class="view-all">View All</a>
+    </h3>
+    
+    {% if scans %}
+    <table class="history-table">
+      <thead>
+        <tr>
+          <th>File Name</th>
+          <th>Score</th>
+          <th>Matched Skills</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for scan in scans[:5] %}
+        <tr>
+          <td>{{ scan[0] }}</td>
+          <td>
+            {% if scan[1] >= 70 %}
+              <span class="score-badge score-high">{{ scan[1] }}%</span>
+            {% elif scan[1] >= 40 %}
+              <span class="score-badge score-medium">{{ scan[1] }}%</span>
+            {% else %}
+              <span class="score-badge score-low">{{ scan[1] }}%</span>
+            {% endif %}
+          </td>
+          <td>{{ scan[3].split(',')|length if scan[3] else 0 }} skills</td>
+          <td>{{ scan[2][:10] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-history">
+      <i class="fas fa-inbox"></i>
+      <p>No scan history yet. Upload your first resume to get started!</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  // File name display
+  document.getElementById('resume').addEventListener('change', function() {
+    const fileName = this.files[0] ? this.files[0].name : 'Choose a file or drag it here';
+    document.getElementById('file-name').textContent = fileName;
+  });
+</script>
+
+</body>
+</html>
