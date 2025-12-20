@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>Upload Resume | AI Resume Scanner</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
     body {
         margin: 0;
@@ -37,7 +38,7 @@
     }
 
     .container {
-        max-width: 700px;
+        max-width: 800px;
         margin: 80px auto;
         background: white;
         color: #333;
@@ -52,6 +53,35 @@
         margin-bottom: 30px;
     }
 
+    .job-desc-section {
+        margin-bottom: 30px;
+        text-align: left;
+    }
+
+    .job-desc-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .job-desc-header i {
+        font-size: 24px;
+        color: #5a2d82;
+        margin-right: 10px;
+    }
+
+    .job-desc-header h3 {
+        color: #5a2d82;
+        margin: 0;
+    }
+
+    .char-count {
+        text-align: right;
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+
     textarea {
         width: 100%;
         padding: 15px;
@@ -60,11 +90,83 @@
         resize: vertical;
         font-size: 15px;
         margin-bottom: 25px;
+        min-height: 200px;
+    }
+
+    .file-upload-section {
+        margin-bottom: 30px;
+        text-align: left;
+    }
+
+    .file-upload-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .file-upload-header i {
+        font-size: 24px;
+        color: #5a2d82;
+        margin-right: 10px;
+    }
+
+    .file-upload-header h3 {
+        color: #5a2d82;
+        margin: 0;
+    }
+
+    .file-upload-area {
+        border: 2px dashed #5a2d82;
+        border-radius: 10px;
+        padding: 30px;
+        text-align: center;
+        background: rgba(90, 45, 130, 0.05);
+        margin-bottom: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .file-upload-area:hover {
+        background: rgba(90, 45, 130, 0.1);
+    }
+
+    .file-upload-area.dragover {
+        background: rgba(90, 45, 130, 0.15);
+    }
+
+    .file-upload-area i {
+        font-size: 36px;
+        color: #5a2d82;
+        margin-bottom: 15px;
+    }
+
+    .file-upload-area p {
+        color: #666;
+        margin-bottom: 15px;
     }
 
     input[type="file"] {
-        width: 100%;
+        display: none;
+    }
+
+    .selected-file {
+        background: rgba(90, 45, 130, 0.05);
+        border-radius: 10px;
+        padding: 15px;
         margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .file-name {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .file-size {
+        color: #666;
+        font-size: 14px;
     }
 
     input[type="submit"] {
@@ -76,11 +178,170 @@
         font-weight: 600;
         cursor: pointer;
         transition: 0.3s;
+        width: 100%;
+        font-size: 16px;
     }
 
     input[type="submit"]:hover {
         background: linear-gradient(45deg, #2575fc, #6a11cb);
         transform: scale(1.05);
+    }
+
+    input[type="submit"]:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .progress-container {
+        margin-top: 20px;
+        display: none;
+    }
+
+    .progress-bar {
+        height: 10px;
+        background-color: #e0e0e0;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+    .progress {
+        height: 100%;
+        background-color: #5a2d82;
+        width: 0%;
+        transition: width 0.3s;
+    }
+
+    .progress-text {
+        margin-top: 10px;
+        text-align: center;
+        color: #666;
+    }
+
+    .result-container {
+        margin-top: 30px;
+        display: none;
+        text-align: left;
+    }
+
+    .result-header {
+        background: #5a2d82;
+        color: white;
+        padding: 15px;
+        border-radius: 10px 10px 0 0;
+        font-weight: 600;
+    }
+
+    .result-body {
+        background: white;
+        border: 1px solid #ddd;
+        border-top: none;
+        padding: 20px;
+        border-radius: 0 0 10px 10px;
+    }
+
+    .score-display {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .score-circle {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: conic-gradient(#5a2d82 0%, #5a2d82 var(--score), #e0e0e0 var(--score), #e0e0e0 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 20px;
+    }
+
+    .score-circle-inner {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        font-weight: 600;
+        color: #5a2d82;
+    }
+
+    .score-details {
+        flex: 1;
+    }
+
+    .score-item {
+        margin-bottom: 10px;
+    }
+
+    .score-label {
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+    .score-bar {
+        height: 8px;
+        background-color: #e0e0e0;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .score-bar-fill {
+        height: 100%;
+        background-color: #5a2d82;
+    }
+
+    .skills-section {
+        margin-top: 20px;
+    }
+
+    .skills-header {
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .skills-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .skill-tag {
+        background: rgba(90, 45, 130, 0.1);
+        color: #5a2d82;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 14px;
+    }
+
+    .missing-skill {
+        background: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+    }
+
+    .toast {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: white;
+        color: #333;
+        padding: 15px 20px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        z-index: 1000;
+        display: none;
+    }
+
+    .toast.success {
+        border-left: 4px solid #28a745;
+    }
+
+    .toast.error {
+        border-left: 4px solid #dc3545;
     }
 </style>
 </head>
@@ -99,16 +360,340 @@
 
 <div class="container">
     <h2>Upload Resume and Job Description</h2>
-    <form action="/upload" method="POST" enctype="multipart/form-data">
-        <label><b>Job Description:</b></label><br>
-        <textarea name="jobdesc" rows="6" placeholder="Paste the job description here..." required></textarea><br>
-
-        <label><b>Upload Resume (PDF/DOCX):</b></label><br>
-        <input type="file" name="resume" accept=".pdf,.docx" required><br>
-
-        <input type="submit" value="Scan Resume">
+    
+    <form id="resume-form" enctype="multipart/form-data">
+        <!-- Job Description Section -->
+        <div class="job-desc-section">
+            <div class="job-desc-header">
+                <i class="fas fa-briefcase"></i>
+                <h3>Job Description</h3>
+            </div>
+            <div class="char-count">
+                <span id="char-count">0</span> / 5000 characters
+            </div>
+            <textarea id="jobdesc" name="jobdesc" rows="6" placeholder="Paste job description here..." required></textarea>
+        </div>
+        
+        <!-- File Upload Section -->
+        <div class="file-upload-section">
+            <div class="file-upload-header">
+                <i class="fas fa-file-upload"></i>
+                <h3>Upload Resume</h3>
+            </div>
+            <div class="file-upload-area" id="file-drop-area">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Drag & drop your resume here or click to browse</p>
+                <input type="file" id="resume" name="resume" accept=".pdf,.docx" required>
+            </div>
+            <div id="selected-file" class="selected-file" style="display: none;">
+                <div class="file-name" id="file-name"></div>
+                <div class="file-size" id="file-size"></div>
+            </div>
+        </div>
+        
+        <div class="progress-container" id="progress-container">
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            <div class="progress-text" id="progress-text">Processing...</div>
+        </div>
+        
+        <input type="submit" value="Scan Resume" id="submit-btn" disabled>
     </form>
+    
+    <div class="result-container" id="result-container">
+        <div class="result-header">Scan Results</div>
+        <div class="result-body">
+            <div class="score-display">
+                <div class="score-circle" style="--score: 0%">
+                    <div class="score-circle-inner" id="overall-score">0%</div>
+                </div>
+                <div class="score-details">
+                    <div class="score-item">
+                        <div class="score-label">Semantic Similarity</div>
+                        <div class="score-bar">
+                            <div class="score-bar-fill" id="similarity-bar" style="width: 0%"></div>
+                        </div>
+                        <div id="similarity-score">0%</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-label">Skills Match</div>
+                        <div class="score-bar">
+                            <div class="score-bar-fill" id="skills-bar" style="width: 0%"></div>
+                        </div>
+                        <div id="skills-score">0%</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-label">Experience</div>
+                        <div class="score-bar">
+                            <div class="score-bar-fill" id="experience-bar" style="width: 0%"></div>
+                        </div>
+                        <div id="experience-score">0 years</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-label">Education</div>
+                        <div class="score-bar">
+                            <div class="score-bar-fill" id="education-bar" style="width: 0%"></div>
+                        </div>
+                        <div id="education-score">0</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="skills-section">
+                <div class="skills-header">Matched Skills</div>
+                <div class="skills-container" id="matched-skills">
+                    <!-- Skills will be populated here -->
+                </div>
+            </div>
+            
+            <div class="skills-section">
+                <div class="skills-header">Missing Skills</div>
+                <div class="skills-container" id="missing-skills">
+                    <!-- Skills will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
+<div class="toast" id="toast"></div>
+
+<script>
+    // DOM elements
+    const fileDropArea = document.getElementById('file-drop-area');
+    const fileInput = document.getElementById('resume');
+    const selectedFileDiv = document.getElementById('selected-file');
+    const fileNameDiv = document.getElementById('file-name');
+    const fileSizeDiv = document.getElementById('file-size');
+    const submitBtn = document.getElementById('submit-btn');
+    const progressContainer = document.getElementById('progress-container');
+    const progressBar = document.getElementById('progress');
+    const progressText = document.getElementById('progress-text');
+    const resultContainer = document.getElementById('result-container');
+    const jobDescTextarea = document.getElementById('jobdesc');
+    const charCount = document.getElementById('char-count');
+    const toast = document.getElementById('toast');
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        setupEventListeners();
+        loadSavedJobDescription();
+    });
+    
+    function setupEventListeners() {
+        // File upload
+        fileDropArea.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', handleFileSelect);
+        
+        // Drag and drop
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            fileDropArea.addEventListener(eventName, preventDefaults, false);
+        });
+        
+        ['dragenter', 'dragover'].forEach(eventName => {
+            fileDropArea.addEventListener(eventName, () => fileDropArea.classList.add('dragover'), false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            fileDropArea.addEventListener(eventName, () => fileDropArea.classList.remove('dragover'), false);
+        });
+        
+        fileDropArea.addEventListener('drop', handleDrop, false);
+        
+        // Form submission
+        document.getElementById('resume-form').addEventListener('submit', handleFormSubmit);
+        
+        // Job description character counter
+        jobDescTextarea.addEventListener('input', function() {
+            const length = this.value.length;
+            charCount.textContent = length;
+            
+            if (length > 5000) {
+                this.value = this.value.substring(0, 5000);
+                charCount.textContent = 5000;
+            }
+            
+            updateSubmitButton();
+            
+            // Save to localStorage
+            localStorage.setItem('jobDescription', this.value);
+        });
+    }
+    
+    function loadSavedJobDescription() {
+        const savedJobDesc = localStorage.getItem('jobDescription');
+        if (savedJobDesc) {
+            jobDescTextarea.value = savedJobDesc;
+            charCount.textContent = savedJobDesc.length;
+        }
+    }
+    
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        if (files.length > 0) {
+            fileInput.files = files;
+            handleFileSelect();
+        }
+    }
+    
+    function handleFileSelect() {
+        if (fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            fileNameDiv.textContent = file.name;
+            fileSizeDiv.textContent = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+            selectedFileDiv.style.display = 'flex';
+            updateSubmitButton();
+        }
+    }
+    
+    function updateSubmitButton() {
+        const hasJobDesc = jobDescTextarea.value.trim().length > 0;
+        const hasFile = fileInput.files.length > 0;
+        submitBtn.disabled = !(hasJobDesc && hasFile);
+    }
+    
+    function handleFormSubmit(e) {
+        e.preventDefault();
+        
+        const formData = new FormData();
+        formData.append('jobdesc', jobDescTextarea.value);
+        formData.append('resume', fileInput.files[0]);
+        
+        // Show progress
+        submitBtn.disabled = true;
+        progressContainer.style.display = 'block';
+        resultContainer.style.display = 'none';
+        
+        // Simulate progress
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += 5;
+            progressBar.style.width = progress + '%';
+            progressText.textContent = `Processing... ${progress}%`;
+            
+            if (progress >= 90) {
+                clearInterval(interval);
+            }
+        }, 200);
+        
+        // Send to server
+        fetch('/upload', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            clearInterval(interval);
+            progressBar.style.width = '100%';
+            progressText.textContent = 'Complete!';
+            
+            if (data.success) {
+                displayResults(data);
+                showToast('Resume scan completed successfully!', 'success');
+            } else {
+                showToast(data.message || 'An error occurred during scanning', 'error');
+            }
+        })
+        .catch(error => {
+            clearInterval(interval);
+            showToast('Upload failed. Please try again.', 'error');
+            console.error('Error:', error);
+        })
+        .finally(() => {
+            submitBtn.disabled = false;
+            setTimeout(() => {
+                progressContainer.style.display = 'none';
+            }, 2000);
+        });
+    }
+    
+    function displayResults(data) {
+        // Update score circle
+        const scoreCircle = document.querySelector('.score-circle');
+        scoreCircle.style.setProperty('--score', data.score + '%');
+        document.getElementById('overall-score').textContent = data.score + '%';
+        
+        // Update score bars
+        document.getElementById('similarity-bar').style.width = data.similarity_score + '%';
+        document.getElementById('similarity-score').textContent = data.similarity_score + '%';
+        
+        document.getElementById('skills-bar').style.width = data.skills_score + '%';
+        document.getElementById('skills-score').textContent = data.skills_score + '%';
+        
+        const experiencePercent = Math.min(data.years_experience * 10, 100);
+        document.getElementById('experience-bar').style.width = experiencePercent + '%';
+        document.getElementById('experience-score').textContent = data.years_experience + ' years';
+        
+        const educationPercent = data.education_level * 20;
+        document.getElementById('education-bar').style.width = educationPercent + '%';
+        document.getElementById('education-score').textContent = getEducationLevel(data.education_level);
+        
+        // Display skills
+        const matchedSkills = document.getElementById('matched-skills');
+        matchedSkills.innerHTML = '';
+        
+        if (data.matched_skills && data.matched_skills.length > 0) {
+            data.matched_skills.forEach(skill => {
+                const skillTag = document.createElement('div');
+                skillTag.className = 'skill-tag';
+                skillTag.textContent = skill;
+                matchedSkills.appendChild(skillTag);
+            });
+        } else {
+            // Fallback if no skills returned
+            for (let i = 0; i < data.matched_count; i++) {
+                const skillTag = document.createElement('div');
+                skillTag.className = 'skill-tag';
+                skillTag.textContent = `Skill ${i+1}`;
+                matchedSkills.appendChild(skillTag);
+            }
+        }
+        
+        const missingSkills = document.getElementById('missing-skills');
+        missingSkills.innerHTML = '';
+        
+        if (data.missing_skills && data.missing_skills.length > 0) {
+            data.missing_skills.forEach(skill => {
+                const skillTag = document.createElement('div');
+                skillTag.className = 'skill-tag missing-skill';
+                skillTag.textContent = skill;
+                missingSkills.appendChild(skillTag);
+            });
+        } else {
+            // Fallback if no skills returned
+            for (let i = 0; i < data.missing_skills_count; i++) {
+                const skillTag = document.createElement('div');
+                skillTag.className = 'skill-tag missing-skill';
+                skillTag.textContent = `Missing Skill ${i+1}`;
+                missingSkills.appendChild(skillTag);
+            }
+        }
+        
+        // Show results
+        resultContainer.style.display = 'block';
+    }
+    
+    function getEducationLevel(level) {
+        const levels = ['None', 'High School', 'Diploma', 'Bachelor', 'Master', 'PhD'];
+        return levels[level] || 'Unknown';
+    }
+    
+    function showToast(message, type = 'info') {
+        toast.textContent = message;
+        toast.className = `toast ${type}`;
+        toast.style.display = 'block';
+        
+        setTimeout(() => {
+            toast.style.display = 'none';
+        }, 5000);
+    }
+</script>
 </body>
 </html>

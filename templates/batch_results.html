@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch Results - AI Resume Scanner</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar {
+            background-color: #4361ee;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .navbar-brand {
+            font-weight: bold;
+            color: white !important;
+        }
+        .nav-link {
+            color: rgba(255,255,255,0.8) !important;
+            transition: color 0.3s;
+        }
+        .nav-link:hover {
+            color: white !important;
+        }
+        .container {
+            margin-top: 30px;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .card-header {
+            background-color: #4361ee;
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            font-weight: bold;
+        }
+        .table {
+            margin-bottom: 0;
+        }
+        .table th {
+            background-color: #f1f3f5;
+            border-top: none;
+        }
+        .badge-score {
+            font-size: 1rem;
+            padding: 0.5em 0.8em;
+        }
+        .progress {
+            height: 25px;
+        }
+        .pagination {
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .job-description {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4361ee;
+        }
+        .btn-primary {
+            background-color: #4361ee;
+            border-color: #4361ee;
+        }
+        .btn-primary:hover {
+            background-color: #3a56d4;
+            border-color: #3a56d4;
+        }
+        .skill-badge {
+            font-size: 0.8rem;
+            margin: 2px;
+        }
+        .details-btn {
+            cursor: pointer;
+        }
+        .modal-content {
+            border-radius: 15px;
+        }
+        .modal-header {
+            background-color: #4361ee;
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+        .modal-title {
+            font-weight: bold;
+        }
+        .btn-close {
+            filter: invert(1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('home') }}">
+                <i class="fas fa-file-alt me-2"></i>AI Resume Scanner
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('about') }}">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('contact') }}">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">Batch Resume Analysis Results</h4>
+                        <a href="{{ url_for('new_batch') }}" class="btn btn-light btn-sm">
+                            <i class="fas fa-plus me-1"></i> New Batch
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        {% if job_description %}
+                        <div class="job-description">
+                            <h5>Job Description</h5>
+                            <p>{{ job_description }}</p>
+                        </div>
+                        {% endif %}
+
+                        {% if results %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Filename</th>
+                                        <th>Overall Score</th>
+                                        <th>Similarity</th>
+                                        <th>Skills Match</th>
+                                        <th>Experience</th>
+                                        <th>Education</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for result in results %}
+                                    <tr>
+                                        <td>{{ result.filename }}</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="progress flex-grow-1 me-2" style="height: 20px;">
+                                                    <div class="progress-bar {% if result.score >= 70 %}bg-success{% elif result.score >= 50 %}bg-warning{% else %}bg-danger{% endif %}" 
+                                                         role="progressbar" style="width: {{ result.score }}%">
+                                                        {{ result.score }}%
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>{{ result.similarity_score }}%</td>
+                                        <td>
+                                            <span class="badge bg-info">{{ result.matched_count }}/{{ result.total_skills }}</span>
+                                        </td>
+                                        <td>{{ result.years_experience }} years</td>
+                                        <td>
+                                            {% if result.education_level == 5 %}
+                                                <span class="badge bg-dark">PhD</span>
+                                            {% elif result.education_level == 4 %}
+                                                <span class="badge bg-primary">Master's</span>
+                                            {% elif result.education_level == 3 %}
+                                                <span class="badge bg-info">Bachelor's</span>
+                                            {% elif result.education_level == 2 %}
+                                                <span class="badge bg-secondary">Diploma</span>
+                                            {% elif result.education_level == 1 %}
+                                                <span class="badge bg-light text-dark">Intermediate</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">Other</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary details-btn" 
+                                                    data-bs-toggle="modal" data-bs-target="#detailsModal{{ loop.index }}">
+                                                <i class="fas fa-eye"></i> Details
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        {% if total_pages > 1 %}
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                {% if page > 1 %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('batch_results', page=page-1) }}">Previous</a>
+                                </li>
+                                {% endif %}
+
+                                {% for p in range(1, total_pages + 1) %}
+                                {% if p == page %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ p }}</span>
+                                </li>
+                                {% else %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('batch_results', page=p) }}">{{ p }}</a>
+                                </li>
+                                {% endif %}
+                                {% endfor %}
+
+                                {% if page < total_pages %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('batch_results', page=page+1) }}">Next</a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                        {% endif %}
+                        {% else %}
+                        <div class="alert alert-info">
+                            No results to display. Please start a new batch scan.
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals for Details -->
+    {% for result in results %}
+    <div class="modal fade" id="detailsModal{{ loop.index }}" tabindex="-1" aria-labelledby="detailsModalLabel{{ loop.index }}" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailsModalLabel{{ loop.index }}">Resume Analysis Details - {{ result.filename }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Overall Score</h6>
+                            <div class="progress mb-3" style="height: 25px;">
+                                <div class="progress-bar {% if result.score >= 70 %}bg-success{% elif result.score >= 50 %}bg-warning{% else %}bg-danger{% endif %}" 
+                                     role="progressbar" style="width: {{ result.score }}%">
+                                    {{ result.score }}%
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Semantic Similarity</h6>
+                            <div class="progress mb-3" style="height: 25px;">
+                                <div class="progress-bar bg-info" role="progressbar" style="width: {{ result.similarity_score }}%">
+                                    {{ result.similarity_score }}%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Skills Match</h6>
+                            <div class="progress mb-3" style="height: 25px;">
+                                <div class="progress-bar bg-warning" role="progressbar" style="width: {{ result.skills_score }}%">
+                                    {{ result.matched_count }}/{{ result.total_skills }} ({{ result.skills_score }}%)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Experience & Education</h6>
+                            <p><strong>Years of Experience:</strong> {{ result.years_experience }}</p>
+                            <p><strong>Education Level:</strong> 
+                                {% if result.education_level == 5 %}
+                                    PhD
+                                {% elif result.education_level == 4 %}
+                                    Master's
+                                {% elif result.education_level == 3 %}
+                                    Bachelor's
+                                {% elif result.education_level == 2 %}
+                                    Diploma
+                                {% elif result.education_level == 1 %}
+                                    Intermediate
+                                {% else %}
+                                    Other
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Matched Skills</h6>
+                            <div class="mb-3">
+                                {% for skill in result.matched_skills %}
+                                <span class="badge bg-success skill-badge">{{ skill }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Missing Skills</h6>
+                            <div class="mb-3">
+                                {% for skill in result.missing_skills %}
+                                <span class="badge bg-danger skill-badge">{{ skill }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show position-fixed" style="top: 70px; right: 20px; z-index: 1050; max-width: 350px;" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
